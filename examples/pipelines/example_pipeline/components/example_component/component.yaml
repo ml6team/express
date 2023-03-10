@@ -1,0 +1,19 @@
+name: example_component
+description: A basic component that takes a project ID as input
+             and writes it to an output file.
+inputs: 
+    - name: project_id
+      description: The id of the gcp-project
+      type: String
+    
+outputs:
+    - name: project_id_file
+      description: Path to the local file containing the gcs path where the output has been stored
+implementation:
+    container:
+        image: europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/example_component:latest
+        command: [
+            python3, main.py,
+            --project-id,       {inputValue: project_id},
+            --project-id-file,  {outputPath: project_id_file},
+        ]

@@ -1,0 +1,130 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  annotations:
+    pipelines.kubeflow.org/kfp_sdk_version: 1.8.14
+    pipelines.kubeflow.org/pipeline_compilation_time: '2023-03-10T09:29:31.836872'
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Basic example of a Kubeflow
+      Pipeline", "inputs": [{"default": "soy-audio-379412", "description": "project
+      ID string", "name": "gcp_project_id", "optional": true}], "name": "example pipeline"}'
+  generateName: example-pipeline-
+  labels:
+    pipelines.kubeflow.org/kfp_sdk_version: 1.8.14
+spec:
+  arguments:
+    parameters:
+    - name: gcp_project_id
+      value: soy-audio-379412
+  entrypoint: example-pipeline
+  serviceAccountName: pipeline-runner
+  templates:
+  - container:
+      args: []
+      command:
+      - python3
+      - main.py
+      - --project-id
+      - '{{inputs.parameters.gcp_project_id}}'
+      - --project-id-file
+      - /tmp/outputs/project_id_file/data
+      image: europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/example_component:latest
+      imagePullPolicy: Always
+    inputs:
+      parameters:
+      - name: gcp_project_id
+    metadata:
+      annotations:
+        pipelines.kubeflow.org/arguments.parameters: '{"project_id": "{{inputs.parameters.gcp_project_id}}"}'
+        pipelines.kubeflow.org/component_ref: '{"digest": "4ba28de6bd095eb76b2105df7f099276f0d8e77d5975bd41be8fb0b426054377",
+          "url": "/home/philippe/Scripts/express/examples/pipelines/example_pipeline/components/example_component/component.yaml"}'
+        pipelines.kubeflow.org/component_spec: '{"description": "A basic component
+          that takes a project ID as input and writes it to an output file.", "implementation":
+          {"container": {"command": ["python3", "main.py", "--project-id", {"inputValue":
+          "project_id"}, "--project-id-file", {"outputPath": "project_id_file"}],
+          "image": "europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/example_component:latest"}},
+          "inputs": [{"description": "The id of the gcp-project", "name": "project_id",
+          "type": "String"}], "name": "example_component", "outputs": [{"description":
+          "Path to the local file containing the gcs path where the output has been
+          stored", "name": "project_id_file"}]}'
+        pipelines.kubeflow.org/task_display_name: example component
+      labels:
+        pipelines.kubeflow.org/enable_caching: 'true'
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.14
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+    name: example-component
+    outputs:
+      artifacts:
+      - name: example-component-project_id_file
+        path: /tmp/outputs/project_id_file/data
+      parameters:
+      - name: example-component-project_id_file
+        valueFrom:
+          path: /tmp/outputs/project_id_file/data
+  - dag:
+      tasks:
+      - arguments:
+          parameters:
+          - name: gcp_project_id
+            value: '{{inputs.parameters.gcp_project_id}}'
+        name: example-component
+        template: example-component
+      - arguments:
+          parameters:
+          - name: example-component-project_id_file
+            value: '{{tasks.example-component.outputs.parameters.example-component-project_id_file}}'
+        dependencies:
+        - example-component
+        name: read-input
+        template: read-input
+    inputs:
+      parameters:
+      - name: gcp_project_id
+    name: example-pipeline
+  - container:
+      args:
+      - --input-v
+      - '{{inputs.parameters.example-component-project_id_file}}'
+      command:
+      - sh
+      - -ec
+      - 'program_path=$(mktemp)
+
+        printf "%s" "$0" > "$program_path"
+
+        python3 -u "$program_path" "$@"
+
+        '
+      - "def read_input(input_v):\n    \"\"\"Lightweight component to print outputs\
+        \ from other components\n    Args:\n        input_v (str): string that is\
+        \ to be printed out\n    \"\"\"\n\n    print(input_v)\n\nimport argparse\n\
+        _parser = argparse.ArgumentParser(prog='Read input', description='Lightweight\
+        \ component to print outputs from other components')\n_parser.add_argument(\"\
+        --input-v\", dest=\"input_v\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parsed_args = vars(_parser.parse_args())\n\n_outputs = read_input(**_parsed_args)\n"
+      image: python:3.7
+      imagePullPolicy: Always
+    inputs:
+      parameters:
+      - name: example-component-project_id_file
+    metadata:
+      annotations:
+        pipelines.kubeflow.org/arguments.parameters: '{"input_v": "{{inputs.parameters.example-component-project_id_file}}"}'
+        pipelines.kubeflow.org/component_ref: '{}'
+        pipelines.kubeflow.org/component_spec: '{"description": "Lightweight component
+          to print outputs from other components", "implementation": {"container":
+          {"args": ["--input-v", {"inputValue": "input_v"}], "command": ["sh", "-ec",
+          "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def read_input(input_v):\n    \"\"\"Lightweight
+          component to print outputs from other components\n    Args:\n        input_v
+          (str): string that is to be printed out\n    \"\"\"\n\n    print(input_v)\n\nimport
+          argparse\n_parser = argparse.ArgumentParser(prog=''Read input'', description=''Lightweight
+          component to print outputs from other components'')\n_parser.add_argument(\"--input-v\",
+          dest=\"input_v\", type=str, required=True, default=argparse.SUPPRESS)\n_parsed_args
+          = vars(_parser.parse_args())\n\n_outputs = read_input(**_parsed_args)\n"],
+          "image": "python:3.7"}}, "inputs": [{"description": "string that is to be
+          printed out", "name": "input_v", "type": "String"}], "name": "Read input"}'
+      labels:
+        pipelines.kubeflow.org/enable_caching: 'true'
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.14
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+    name: read-input
