@@ -1,0 +1,18 @@
+name: load_from_hub
+description: A basic component that takes a dataset name from the 🤗 hub as input and uploads it to a GCS bucket.
+inputs: 
+    - name: dataset_name
+      description: Name of the HF Dataset from the 🤗 hub
+      type: String
+    
+outputs:
+  - name: data_manifest_path
+    description: Path to the local file containing the gcs path where the output has been stored
+
+implementation:
+    container:
+        image: europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/example_component:latest
+        command: [
+            python3, main.py,
+            --dataset_name,       {inputValue: dataset_name},
+        ]
