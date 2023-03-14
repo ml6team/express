@@ -1,2 +1,2 @@
 # Add component requirements here
-git+git@github.com:ml6team/express.git
+git+https://github.com/ml6team/express.git@main
