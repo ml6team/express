@@ -2,11 +2,9 @@
 
 from dataclasses import dataclass
 
-from config.common_config import GeneralConfig, KubeflowConfig
-
 
 @dataclass
-class DatasetLoaderConfig(KubeflowConfig):
+class DatasetLoaderConfig:
     """
     Configs for the dataset loader component
     Params:
@@ -20,7 +18,7 @@ class DatasetLoaderConfig(KubeflowConfig):
 
 
 @dataclass
-class ImageFilterConfig(KubeflowConfig):
+class ImageFilterConfig:
     """
     Configs for the dataset filter component
     Params:
@@ -36,7 +34,7 @@ class ImageFilterConfig(KubeflowConfig):
 
 
 @dataclass
-class ImageConversionConfig(KubeflowConfig):
+class ImageConversionConfig:
     """
     Configs for dataset image converter component
     Params:
@@ -50,7 +48,7 @@ class ImageConversionConfig(KubeflowConfig):
 
 
 @dataclass
-class ImageEmbeddingConfig(KubeflowConfig):
+class ImageEmbeddingConfig:
     """
     Configs for dataset image embedding component
     Params:
@@ -60,7 +58,7 @@ class ImageEmbeddingConfig(KubeflowConfig):
 
 
 @dataclass
-class ClipRetrievalConfig(KubeflowConfig):
+class ClipRetrievalConfig:
     """
     Configs for dataset image converter component
     Params:
@@ -79,7 +77,7 @@ class ClipRetrievalConfig(KubeflowConfig):
 
 
 @dataclass
-class ClipDownloaderConfig(KubeflowConfig):
+class ClipDownloaderConfig:
     """
     Configs for dataset image converter component
     Params:
@@ -96,7 +94,7 @@ class ClipDownloaderConfig(KubeflowConfig):
 
 
 @dataclass
-class ImageCaptionConfig(KubeflowConfig):
+class ImageCaptionConfig:
     """
     Configs for dataset image converter component
     Params:

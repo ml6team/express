@@ -1,38 +1,42 @@
 """Pipeline used to create a stable diffusion dataset from a set of given images. This is done by
 using clip retrieval on the LAION dataset"""
 # pylint: disable=import-error
+import sys
+import os
 import logging
 
 from kfp import components as comp
 from kfp import dsl
 from kubernetes import client as k8s_client
 
-from config.general_config import GeneralConfig, KubeflowConfig
-from config.dataset_creation_config import DatasetLoaderConfig, ImageFilterConfig, \
+sys.path.insert(0, os.path.abspath('..'))
+
+from config import GeneralConfig, KubeflowConfig
+from pipelines_config.dataset_creation_config import DatasetLoaderConfig, ImageFilterConfig, \
     ImageConversionConfig, ImageEmbeddingConfig, ImageCaptionConfig, ClipRetrievalConfig, \
     ClipDownloaderConfig
-from helpers.upload import compile_and_upload_pipeline
+from express.kfp_utils import compile_and_upload_pipeline
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 # Load Component
 dataset_loader_component = comp.load_component(
-    '../components/dataset_loader_component/component.yaml')
+    'components/dataset_loader_component/component.yaml')
 image_filter_component = comp.load_component(
-    '../components/image_filter_component/component.yaml')
+    'components/image_filter_component/component.yaml')
 image_conversion_component = comp.load_component(
-    '../components/image_conversion_component/component.yaml')
+    'components/image_conversion_component/component.yaml')
 image_embedding_component = comp.load_component(
-    '../components/image_embedding_component/component.yaml')
+    'components/image_embedding_component/component.yaml')
 clip_retrieval_component = comp.load_component(
-    '../components/clip_retrieval_component/component.yaml')
+    'components/clip_retrieval_component/component.yaml')
 clip_downloader_component = comp.load_component(
-    '../components/clip_downloader_component/component.yaml')
+    'components/clip_downloader_component/component.yaml')
 image_classifier_component = comp.load_component(
-    '../components/image_classifier_component/component.yaml')
+    'components/image_classifier_component/component.yaml')
 image_caption_component = comp.load_component(
-    '../components/image_caption_component/component.yaml')
+    'components/image_caption_component/component.yaml')
 
 
 # Pipeline

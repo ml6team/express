@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Read component configs
-. ../../components.config
+. ../../../components.config
 
 # Set some variables
 ARTIFACT_PATH=${PROJECT_ARTIFACT_PATH}
