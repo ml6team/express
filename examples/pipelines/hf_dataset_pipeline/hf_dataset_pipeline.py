@@ -1,6 +1,9 @@
 """
 This module includes a reusable component import and a basic pipeline utilising it.
 """
+
+import json
+
 from kfp import components as comp
 from kfp import dsl
 
@@ -21,8 +24,15 @@ def hf_dataset_pipeline(dataset_name=GeneralConfig.DATASET_NAME):
     Args:
         dataset_name (str): name of the dataset on the hub
     """
-    # Component Arguments go here
-    load_from_hub_task = load_from_hub_op(dataset_name=dataset_name).set_display_name('HF Dataset loader component')
+    run_id = '{{pod.name}}'
+    artifact_bucket = KubeflowConfig.ARTIFACT_BUCKET
+
+    metadata_args = {"run_id": run_id, "component_name": load_from_hub_op.__name__, "artifact_bucket": artifact_bucket}
+
+    load_from_hub_task = load_from_hub_op(extra_args=f'{"dataset_name":{dataset_name}}',
+                                          metadata_args=json.dumps(metadata_args),
+    )
+    load_from_hub_task.set_display_name('HF Dataset loader component')
 
 
 if __name__ == '__main__':

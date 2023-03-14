@@ -41,7 +41,6 @@ class SeedDatasetLoader(HFDatasetsLoaderComponent):
         
         # 3) Create dataset draft from index and additional data sources
         dataset_draft = HFDatasetsDatasetDraft(index=index, data_sources=data_sources)
-        return dataset_draft
 
 
 if __name__ == '__main__':

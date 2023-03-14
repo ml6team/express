@@ -8,9 +8,11 @@ class GeneralConfig:
     """
     General configs
     Params:
+        GCP_PROJECT_ID (str): GCP project ID
         DATASET_NAME (str): name of the Hugging Face dataset
         ENV (str): the project run environment (sbx, dev, prd)
     """
+    GCP_PROJECT_ID = "soy-audio-379412"
     DATASET_NAME = "lambdalabs/pokemon-blip-captions"
     ENV = os.environ.get('ENV', 'dev')
 

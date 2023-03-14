@@ -1,18 +1,24 @@
 name: load_from_hub
 description: A basic component that takes a dataset name from the 🤗 hub as input and uploads it to a GCS bucket.
 inputs: 
-    - name: dataset_name
-      description: Name of the HF Dataset from the 🤗 hub
+    - name: extra_args
+      description: Additional arguments passed to the component, as a json dict string
+      type: String
+    
+    - name: metadata_args
+      description: Metadata arguments, passed as a json dict string
       type: String
     
 outputs:
-  - name: data_manifest_path
-    description: Path to the local file containing the gcs path where the output has been stored
+    - name: output_manifest
+      description: Path to the output manifest
 
 implementation:
     container:
-        image: europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/example_component:latest
+        image: europe-west4-docker.pkg.dev/soy-audio-379412/soy-audio-379412-default-repository/kubeflow-components/components/load_from_hub:latest
         command: [
             python3, main.py,
-            --dataset_name,       {inputValue: dataset_name},
+            --extra-args,       {inputValue: extra_args},
+            --metadata-args,       {inputValue: metadata_args},
+            --output-manifest,       {outputPath: output_manifest},
         ]
