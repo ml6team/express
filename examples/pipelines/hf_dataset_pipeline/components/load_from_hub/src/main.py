@@ -27,7 +27,7 @@ class SeedDatasetLoader(HFDatasetsLoaderComponent):
         configure_logging()
         
         # 1) Create data source
-        caption_dataset = load_dataset(extra_args["dataset_name"])
+        caption_dataset = load_dataset(extra_args["dataset_name"], split="train")
 
         # 2) Create an example index
         index_list = [f"image_{idx}" for idx in range(len(caption_dataset))]
@@ -41,6 +41,8 @@ class SeedDatasetLoader(HFDatasetsLoaderComponent):
         
         # 3) Create dataset draft from index and additional data sources
         dataset_draft = HFDatasetsDatasetDraft(index=index, data_sources=data_sources)
+
+        return dataset_draft
 
 
 if __name__ == '__main__':

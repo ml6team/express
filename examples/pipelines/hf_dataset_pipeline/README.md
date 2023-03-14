@@ -45,7 +45,9 @@ For each component, a `Config` class needs to created which defines a configurat
 
 First, make sure you define a `components.config` file at the pipeline root level. This file defines the root of the directory where artificats get placed (Docker images). Each component's `component.yaml` file then defines the actual path to store the Docker image.
 
-Next, run `sh build_image.sh` bash script for each component manually.
+Next, run `sh build_image.sh` bash script for each component manually. This will create a Docker image on the cloud (artificat registry) for each component
 
 ## 4. Deploy the pipeline
+
+Finally, you can deploy the pipeline on the cloud by running the main script of your pipeline, e.g. `python hf_dataset_pipeline.py`. To run the pipeline, you can go to the KubeFlow UI and click "run".
 

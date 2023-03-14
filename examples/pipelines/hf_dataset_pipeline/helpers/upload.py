@@ -43,7 +43,7 @@ def compile_and_upload_pipeline(pipeline: Callable[[], None], host: str, env: st
     """
     client = kfp.Client(host=host)
 
-    pipeline_name = f"example:{env}"
+    pipeline_name = f"{pipeline.__name__}:{env}"
     pipeline_filename = f"{pipeline_name}.yaml"
     compiler.Compiler().compile(pipeline_func=pipeline, package_path=pipeline_filename)
 

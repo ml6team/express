@@ -6,3 +6,9 @@ python3 main.py --extra-args '{"dataset_name": "lambdalabs/pokemon-blip-captions
   --metadata-args '{"run_id":"test","component_name":"test_component", \
   "artifact_bucket":"soy-audio-379412_kfp-artifacts"}'
 ```
+
+To build the Docker image, simply run:
+
+```
+sh build_image.sh
+```
