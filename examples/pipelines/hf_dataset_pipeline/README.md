@@ -39,13 +39,23 @@ if __name__ == '__main__':
 
 ### Create the configurations
 
-For each component, a `Config` class needs to created which defines a configuration for each component, as well as a general config. Those are then used within the pipeline.
+For each component, a `Config` class can be created which defines a configuration (hyperparameters) for each component. Typically, also a `GeneralConfig` is defined which includes general information like the cloud project ID.
+
+The config classes are then imported in the pipeline, and pass to the op functions, which in turn pass them to the component scripts.
 
 ## 3. Build the Docker images for each of the components
 
-First, make sure you define a `components.config` file at the pipeline root level. This file defines the root of the directory where artificats get placed (Docker images). Each component's `component.yaml` file then defines the actual path to store the Docker image.
+First, make sure you define a `components.config` file at the pipeline root level. This file defines the root of the directory where artifacts get placed (Docker images). Each component's `component.yaml` file then defines the actual path to the Docker image.
 
-Next, run `sh build_image.sh` bash script for each component manually. This will create a Docker image on the cloud (artificat registry) for each component
+Next, run `sh build_image.sh` bash script for each component manually. This will create a Docker image on the cloud (artifact registry) for each component.
+
+Tip: it's advised to turn on caching when building images on GCS. This can be done by running the following locally:
+
+```
+gcloud config set builds/use_kaniko True
+```
+
+This ensures that, when building a new image, only files that are changed will get rebuild. See [this link](https://cloud.google.com/build/docs/optimize-builds/kaniko-cache#configuring_the_cache_expiration_time) for more details.
 
 ## 4. Deploy the pipeline
 
